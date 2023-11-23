@@ -1,0 +1,7 @@
+database:
+  port: 27017
+  addr: localhost
+  password: password
+  user: admin
+  dbName: global-cinema
+  strConn: mongodb://admin:password@localhost:27017/test?authSource=admin
