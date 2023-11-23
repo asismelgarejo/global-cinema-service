@@ -5,3 +5,10 @@ database:
   user: admin
   dbName: global-cinema
   strConn: mongodb://admin:password@localhost:27017/test?authSource=admin
+redis:
+  port: 6379
+  addr: localhost
+  password:
+  user:
+  dbName: 0
+  strConn: localhost:6379
