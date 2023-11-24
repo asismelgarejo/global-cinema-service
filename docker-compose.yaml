@@ -4,6 +4,7 @@ services:
     image: global-cinema-service
     environment:
     - MODE=production
+    - JWT_TOKEN="eUbP9shywUygMx7u"
     networks:
       - global-cinema-network
     deploy:
