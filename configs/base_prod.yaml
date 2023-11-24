@@ -1,14 +1,14 @@
 database:
   port: 27017
-  addr: localhost
+  addr: global-cinema-mongodb
   password: user
   user: admin
   dbName: global-cinema
-  strConn: mongodb://admin:password@localhost:27017/test?authSource=admin
+  strConn: mongodb://admin:password@global-cinema-mongodb:27017/test?authSource=admin
 redis:
   port: 6379
-  addr: localhost
+  addr: global-cinema-redis
   password:
   user:
   dbName: 0
-  strConn: localhost:6379
+  strConn: global-cinema-redis:6379

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -20,6 +21,7 @@ import (
 	middleware "api/pkg/middleware"
 	"context"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -31,8 +33,8 @@ var redisClient *redis.Client
 func init() {
 	//---Reading config file
 	configFile := "./configs/base_dev.yaml"
-	if os.Getenv("mode") == "production" {
-		configFile = "./configs/base_prod.yaml"
+	if os.Getenv("MODE") == "production" {
+		configFile = "base_prod.yaml"
 	}
 	f, err := os.Open(configFile)
 	if err != nil {
@@ -85,7 +87,14 @@ func init() {
 
 func main() {
 	router := gin.Default()
-
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "OPTIONS"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	//Movies
 	repo := repoMovie.New(database.Collection("movies"))
 	ctrl := ctrlMovie.New(repo)
@@ -121,4 +130,5 @@ func main() {
 	}
 
 	router.Run()
+	// router.RunTLS(":443", "certs/localhost.crt", "certs/localhost.key")
 }

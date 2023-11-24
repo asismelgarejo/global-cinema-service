@@ -1,5 +1,13 @@
 version: "3.9"
 services:
+  global-cinema-service:
+    image: global-cinema-service
+    environment:
+    - MODE=production
+    networks:
+      - global-cinema-network
+    deploy:
+      replicas: 5
   global-cinema-mongodb:
     image: mongo
     ports:
@@ -17,6 +25,21 @@ services:
       - 6379:6379
     networks:
       - global-cinema-network
+  global-cinema-nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - global-cinema-service
+      - global-cinema-client
+    networks:
+      - global-cinema-network
+  global-cinema-client:
+    image: global-cinema-client
+    networks:
+    - global-cinema-network
 networks:
   global-cinema-network:
     driver: bridge
