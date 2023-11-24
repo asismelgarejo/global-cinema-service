@@ -10,6 +10,7 @@ type MovieRepository interface {
 	GetMovies(ctx context.Context) ([]*model.Movie, error)
 	UpdateMovie(ctx context.Context, id string, movieData model.Movie) (*model.Movie, error)
 	DeleteMovie(ctx context.Context, id string) (string, error)
+	GetMovie(ctx context.Context, id string) (*model.Movie, error)
 }
 
 type MovieController struct {
@@ -45,6 +46,13 @@ func (c *MovieController) DeleteMovie(ctx context.Context, id string) (string, e
 	response, err := c.repo.DeleteMovie(ctx, id)
 	if err != nil {
 		return "", err
+	}
+	return response, nil
+}
+func (c *MovieController) GetMovie(ctx context.Context, id string) (*model.Movie, error) {
+	response, err := c.repo.GetMovie(ctx, id)
+	if err != nil {
+		return nil, err
 	}
 	return response, nil
 }

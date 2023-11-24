@@ -105,3 +105,16 @@ func (h *MovieHandler) DeleteMovie(c *gin.Context) {
 		"data": dataResponse,
 	})
 }
+func (h *MovieHandler) GetMovie(c *gin.Context) {
+	movieId := c.Params.ByName("movieId")
+
+	dataResponse, err := h.ctrl.GetMovie(c.Request.Context(), movieId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": dataResponse,
+	})
+}

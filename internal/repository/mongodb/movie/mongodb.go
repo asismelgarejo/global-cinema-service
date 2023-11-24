@@ -3,6 +3,7 @@ package movie
 import (
 	"api/pkg/model"
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -63,6 +64,12 @@ func (m *RepoMovie) UpdateMovie(ctx context.Context, id string, movieData model.
 	return &movieData, nil
 }
 func (m *RepoMovie) DeleteMovie(ctx context.Context, id string) (string, error) {
+
+	_, err := m.GetMovie(ctx, id)
+	if err != nil {
+		return "", err
+	}
+
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return "", err
@@ -75,4 +82,23 @@ func (m *RepoMovie) DeleteMovie(ctx context.Context, id string) (string, error) 
 		return "", err
 	}
 	return id, nil
+}
+func (m *RepoMovie) GetMovie(ctx context.Context, id string) (*model.Movie, error) {
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	response := m.collection.FindOne(ctx, bson.M{"_id": objectId})
+	if response.Err() != nil {
+		if response.Err() == mongo.ErrNoDocuments {
+			return nil, fmt.Errorf("movie not found")
+		}
+		return nil, response.Err()
+	}
+
+	var movie model.Movie
+	if err := response.Decode(&movie); err != nil {
+		return nil, err
+	}
+	return &movie, nil
 }
